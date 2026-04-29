@@ -1,1 +1,42 @@
+# Entorno virtual
 .venv/
+venv/
+env/
+
+# Base de datos
+*.sqlite3
+
+# Archivos compilados de Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Archivos de migraciones compilados
+*.pyc
+
+# Archivos estáticos recolectados
+staticfiles/
+static_root/
+
+# Archivos de medios subidos
+media/
+
+# Variables de entorno
+.env
+.env.*
+
+# Configuraciones del IDE
+.vscode/
+.idea/
+*.code-workspace
+
+# Archivos del sistema operativo
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Logs
+*.log
+
+# Respaldos generados
+respaldo_sistea_*.json
