@@ -1,0 +1,47 @@
+{% extends 'sistex/base.html' %}
+{% block title %}Estudiantes · SisTEA{% endblock %}
+{% block content %}
+
+<div class="card">
+    <div class="card-header">
+        <h2>&#128102; Mis Estudiantes</h2>
+    </div>
+
+    {% if estudiantes %}
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Fecha de Nacimiento</th>
+                <th>Evaluaciones</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for e in estudiantes %}
+            <tr>
+                <td><strong>{{ e.nombre }}</strong></td>
+                <td>{{ e.fecha_nacimiento }}</td>
+                <td>
+                    <span class="badge" style="background: var(--azul-claro); color: var(--azul-oscuro);">
+                        {{ e.evaluaciones.count }}
+                    </span>
+                </td>
+                <td style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <a href="{% url 'detalle_estudiante' e.pk %}" class="btn btn-outline" style="font-size:0.82rem; padding:0.4rem 0.9rem;">Ver</a>
+                    <a href="{% url 'nueva_evaluacion' e.pk %}" class="btn btn-success" style="font-size:0.82rem; padding:0.4rem 0.9rem;">&#129504; Evaluar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div style="text-align: center; padding: 2.5rem 1rem; color: var(--texto-suave);">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">&#128102;</div>
+        <p style="font-weight: 600;">No tienes estudiantes asignados a&uacute;n.</p>
+        <p style="font-size: 0.88rem; margin-top: 0.5rem;">Contacta al administrador para que te asigne estudiantes.</p>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

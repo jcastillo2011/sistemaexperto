@@ -1,0 +1,71 @@
+{% extends 'sistex/base.html' %}
+{% block title %}Logs del Sistema · SisTEA{% endblock %}
+{% block content %}
+
+<p class="page-title">&#128196; Logs del Sistema</p>
+
+<div class="card">
+    <div class="card-header">
+        <h3>&#128336; Historial de Actividad</h3>
+        <span class="badge" style="background: var(--azul-claro); color: var(--azul-oscuro); font-size: 0.9rem; padding: 0.35rem 0.9rem;">
+            Últimas {{ logs|length }} acciones
+        </span>
+    </div>
+
+    {% if logs %}
+    <table>
+        <thead>
+            <tr>
+                <th>Fecha y Hora</th>
+                <th>Usuario</th>
+                <th>Acción</th>
+                <th>Descripción</th>
+                <th>IP</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in logs %}
+            <tr>
+                <td style="font-size: 0.85rem; white-space: nowrap;">
+                    {{ log.fecha|date:"d/m/Y H:i:s" }}
+                </td>
+                <td><strong>{{ log.usuario.get_full_name|default:log.usuario.username|default:"—" }}</strong></td>
+                <td>
+                    {% if log.accion == 'login' %}
+                    <span class="badge badge-bajo">&#128275; Inicio sesión</span>
+                    {% elif log.accion == 'logout' %}
+                    <span class="badge" style="background:#EEE; color:#555;">&#128274; Cierre sesión</span>
+                    {% elif log.accion == 'crear' %}
+                    <span class="badge badge-bajo">&#43; Creación</span>
+                    {% elif log.accion == 'editar' %}
+                    <span class="badge badge-medio">&#9998; Edición</span>
+                    {% elif log.accion == 'eliminar' %}
+                    <span class="badge badge-alto">&#10005; Eliminación</span>
+                    {% elif log.accion == 'evaluar' %}
+                    <span class="badge" style="background:#EDE7F6; color:#4A148C;">&#129504; Evaluación</span>
+                    {% elif log.accion == 'toggle' %}
+                    <span class="badge badge-medio">&#8635; Cambio estado</span>
+                    {% elif log.accion == 'respaldo' %}
+                    <span class="badge" style="background:#E3F2FD; color:#0D47A1;">&#128190; Respaldo</span>
+                    {% elif log.accion == 'restaurar' %}
+                    <span class="badge" style="background:#FFF3E0; color:#E65100;">&#128257; Restauración</span>
+                    {% endif %}
+                </td>
+                <td style="font-size: 0.88rem;">{{ log.descripcion }}</td>
+                <td style="font-size: 0.82rem; color: var(--texto-suave);">{{ log.ip|default:"—" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div style="text-align: center; padding: 2.5rem; color: var(--texto-suave);">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">&#128196;</div>
+        <p style="font-weight: 600;">No hay actividad registrada aún.</p>
+        <p style="font-size: 0.88rem; margin-top: 0.5rem;">Las acciones del sistema se registrarán aquí automáticamente.</p>
+    </div>
+    {% endif %}
+</div>
+
+<a href="{% url 'admin_dashboard' %}" class="btn btn-outline">&#8592; Volver al panel</a>
+
+{% endblock %}

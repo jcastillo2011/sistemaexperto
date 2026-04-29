@@ -1,0 +1,114 @@
+{% extends 'sistex/base.html' %}
+{% block title %}Resultados · {{ evaluacion.estudiante.nombre }} · SisTEA{% endblock %}
+{% block content %}
+
+<p class="page-title">&#128202; Resultados de Evaluación</p>
+
+<!-- Encabezado -->
+<div class="card" style="background: var(--azul-claro); border: 1px solid #C5D9F0;">
+    <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+        <span style="font-size: 2.5rem;">&#128102;</span>
+        <div>
+            <p style="font-weight: 800; color: var(--azul-oscuro); font-size: 1.15rem;">
+                {{ evaluacion.estudiante.nombre }}
+            </p>
+            <p style="font-size: 0.88rem; color: var(--texto-suave);">
+                Evaluación realizada el {{ evaluacion.fecha|date:"d/m/Y" }} a las {{ evaluacion.fecha|date:"H:i" }}
+                &nbsp;&middot;&nbsp; Instructor: {{ evaluacion.instructor }}
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Perfil del estudiante -->
+<div class="card">
+    <div class="card-header">
+        <h3>&#128269; Perfil Evaluado</h3>
+    </div>
+    <table>
+        <thead>
+            <tr><th>Área Evaluada</th><th>Nivel de Dificultad</th></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Comunicación</td>
+                <td><span class="badge badge-{{ evaluacion.dificultad_comunicacion }}">{{ evaluacion.get_dificultad_comunicacion_display }}</span></td>
+            </tr>
+            <tr>
+                <td>Conductas repetitivas</td>
+                <td><span class="badge badge-{{ evaluacion.conductas_repetitivas }}">{{ evaluacion.get_conductas_repetitivas_display }}</span></td>
+            </tr>
+            <tr>
+                <td>Interacción social</td>
+                <td><span class="badge badge-{{ evaluacion.interaccion_social }}">{{ evaluacion.get_interaccion_social_display }}</span></td>
+            </tr>
+            <tr>
+                <td>Sensibilidad sensorial</td>
+                <td><span class="badge badge-{{ evaluacion.sensibilidad_sensorial }}">{{ evaluacion.get_sensibilidad_sensorial_display }}</span></td>
+            </tr>
+            <tr>
+                <td>Atención / Concentración</td>
+                <td><span class="badge badge-{{ evaluacion.atencion_concentracion }}">{{ evaluacion.get_atencion_concentracion_display }}</span></td>
+            </tr>
+            <tr>
+                <td>Habilidades motoras</td>
+                <td><span class="badge badge-{{ evaluacion.habilidades_motoras }}">{{ evaluacion.get_habilidades_motoras_display }}</span></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Recomendaciones -->
+<div class="card">
+    <div class="card-header">
+        <h3>&#127919; Recomendaciones Pedagógicas</h3>
+        <span class="badge" style="background: var(--azul-claro); color: var(--azul-oscuro); font-size: 0.9rem; padding: 0.35rem 0.9rem;">
+            {{ recomendaciones.count }} generadas
+        </span>
+    </div>
+
+    {% if recomendaciones %}
+        {% for rec in recomendaciones %}
+        <div class="rec-card">
+            <strong>{{ rec.regla.nombre }}</strong>
+            <p>{{ rec.descripcion }}</p>
+            {% if rec.recurso_didactico %}
+            <p class="rec-recursos">&#128218; <strong>Recursos sugeridos:</strong> {{ rec.recurso_didactico }}</p>
+            {% endif %}
+            {% if rec.regla.fuente_bibliografica %}
+            <p style="margin-top: 0.5rem; font-size: 0.78rem; color: var(--texto-suave); border-top: 1px solid var(--gris-borde); padding-top: 0.4rem;">
+                &#128218; <strong>Fuente:</strong> {{ rec.regla.fuente_bibliografica }}
+            </p>
+            {% endif %}
+        </div>
+        {% endfor %}
+    {% else %}
+    <div style="text-align: center; padding: 2rem; color: var(--texto-suave);">
+        <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">&#9989;</div>
+        <p style="font-weight: 700; color: var(--verde);">¡Excelente desempeño!</p>
+        <p style="font-size: 0.93rem; margin-top: 0.4rem;">
+            Los niveles registrados son bajos en todas las áreas evaluadas.
+        </p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Notas del instructor -->
+{% if evaluacion.notas %}
+<div class="card">
+    <div class="card-header"><h3>&#128221; Notas del Instructor</h3></div>
+    <p style="font-size: 0.95rem; line-height: 1.7; color: var(--texto);">{{ evaluacion.notas }}</p>
+</div>
+{% endif %}
+
+<!-- Acciones -->
+<div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.5rem;">
+    {% if user.estudiante_perfil is not None %}
+    <a href="{% url 'estudiante_dashboard' %}" class="btn btn-outline">&#8592; Volver a mi perfil</a>
+    {% else %}
+    <a href="{% url 'detalle_estudiante' evaluacion.estudiante.pk %}" class="btn btn-outline">&#8592; Volver al estudiante</a>
+    <a href="{% url 'nueva_evaluacion' evaluacion.estudiante.pk %}" class="btn btn-success">&#129504; Nueva evaluación</a>
+    {% endif %}
+</div>
+
+{% endblock %}

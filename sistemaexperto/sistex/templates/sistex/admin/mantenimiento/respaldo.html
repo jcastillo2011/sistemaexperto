@@ -1,0 +1,32 @@
+{% extends 'sistex/base.html' %}
+{% block title %}Respaldo · SisTEA{% endblock %}
+{% block content %}
+
+<p class="page-title">&#128190; Respaldo de Base de Datos</p>
+
+<div class="card">
+    <div class="card-header">
+        <h3>&#128190; Generar Respaldo</h3>
+    </div>
+    <p style="color: var(--texto-suave); font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.7;">
+        Esta opción genera un archivo <strong>.json</strong> con toda la información del sistema:
+        usuarios, instructores, estudiantes, evaluaciones, reglas y recomendaciones.
+        Guarda este archivo en un lugar seguro para poder restaurar el sistema en caso de pérdida de datos.
+    </p>
+
+    <div style="background: var(--azul-claro); border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; font-size: 0.9rem;">
+        &#9432; El archivo se descargará automáticamente con el nombre
+        <strong>respaldo_sistea_YYYYMMDD_HHMMSS.json</strong>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-success" style="font-size: 1rem; padding: 0.75rem 2rem;">
+            &#11015;&#65039; Descargar Respaldo
+        </button>
+    </form>
+</div>
+
+<a href="{% url 'admin_dashboard' %}" class="btn btn-outline">&#8592; Volver al panel</a>
+
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'sistex/base.html' %}
+{% block title %}{{ titulo }} · SisTEA{% endblock %}
+{% block content %}
+
+<div style="max-width: 540px; margin: 0 auto;">
+    <p class="page-title">👦 {{ titulo }}</p>
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="form-group">
+                <label>{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                <p class="form-error">{{ field.errors.0 }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+            <div style="margin-top: 1.75rem; display: flex; gap: 1rem;">
+                <button type="submit" class="btn btn-success">💾 Guardar</button>
+                <a href="{% url 'lista_estudiantes' %}" class="btn btn-outline">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends 'sistex/base.html' %}
+{% block title %}{{ estudiante.nombre }} · SisTEA{% endblock %}
+{% block content %}
+
+<div class="card">
+    <div class="card-header">
+        <div>
+            <h2>&#128102; {{ estudiante.nombre }}</h2>
+            <p style="color: var(--texto-suave); font-size: 0.9rem; margin-top: 0.25rem;">
+                Fecha de nacimiento: {{ estudiante.fecha_nacimiento }}
+            </p>
+        </div>
+        <a href="{% url 'nueva_evaluacion' estudiante.pk %}" class="btn btn-success">&#129504; Nueva Evaluaci&oacute;n</a>
+    </div>
+    {% if estudiante.observaciones %}
+    <div style="background: var(--azul-claro); border-radius: 8px; padding: 0.85rem 1rem; font-size: 0.93rem; color: var(--texto);">
+        &#128221; {{ estudiante.observaciones }}
+    </div>
+    {% endif %}
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3>&#128203; Historial de Evaluaciones</h3>
+    </div>
+
+    {% if evaluaciones %}
+    <table>
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Comunicaci&oacute;n</th>
+                <th>Conductas</th>
+                <th>Social</th>
+                <th>Recomendaciones</th>
+                <th>Acci&oacute;n</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ev in evaluaciones %}
+            <tr>
+                <td>{{ ev.fecha|date:"d/m/Y H:i" }}</td>
+                <td><span class="badge badge-{{ ev.dificultad_comunicacion }}">{{ ev.get_dificultad_comunicacion_display }}</span></td>
+                <td><span class="badge badge-{{ ev.conductas_repetitivas }}">{{ ev.get_conductas_repetitivas_display }}</span></td>
+                <td><span class="badge badge-{{ ev.interaccion_social }}">{{ ev.get_interaccion_social_display }}</span></td>
+                <td>
+                    <span class="badge" style="background: var(--azul-claro); color: var(--azul-oscuro);">
+                        {{ ev.recomendaciones.count }}
+                    </span>
+                </td>
+                <td>
+                    <a href="{% url 'resultados_evaluacion' ev.pk %}" class="btn btn-outline" style="font-size:0.82rem; padding:0.4rem 0.9rem;">
+                        Ver resultados
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div style="text-align: center; padding: 2rem; color: var(--texto-suave);">
+        <p style="font-weight: 600;">Este estudiante no tiene evaluaciones a&uacute;n.</p>
+        <a href="{% url 'nueva_evaluacion' estudiante.pk %}" class="btn btn-success" style="margin-top: 1rem;">&#129504; Realizar primera evaluaci&oacute;n</a>
+    </div>
+    {% endif %}
+</div>
+
+<a href="{% url 'lista_estudiantes' %}" class="btn btn-outline">&#8592; Volver a la lista</a>
+
+{% endblock %}

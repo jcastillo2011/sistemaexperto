@@ -1,0 +1,25 @@
+{% extends 'sistex/base.html' %}
+{% block title %}Confirmar eliminación · SisTEA{% endblock %}
+{% block content %}
+
+<div style="max-width: 460px; margin: 3rem auto;">
+    <div class="card" style="text-align: center;">
+        <div style="font-size: 3.5rem; margin-bottom: 1rem;">⚠️</div>
+        <h2 style="color: var(--rojo); font-size: 1.3rem; margin-bottom: 0.75rem;">Confirmar eliminación</h2>
+        <p style="color: var(--texto-suave); font-size: 0.95rem; line-height: 1.6;">
+            ¿Estás seguro de que deseas eliminar a <strong style="color: var(--texto);">{{ objeto }}</strong>?
+            <br>Esta acción no se puede deshacer.
+        </p>
+        <form method="post" style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: center;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+            {% if tipo == 'instructor' %}
+            <a href="{% url 'admin_instructores' %}" class="btn btn-outline">Cancelar</a>
+            {% else %}
+            <a href="{% url 'admin_estudiantes' %}" class="btn btn-outline">Cancelar</a>
+            {% endif %}
+        </form>
+    </div>
+</div>
+
+{% endblock %}

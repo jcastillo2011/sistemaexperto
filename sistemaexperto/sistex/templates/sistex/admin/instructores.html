@@ -1,0 +1,71 @@
+{% extends 'sistex/base.html' %}
+{% block title %}Instructores · Panel Admin · SisTEA{% endblock %}
+{% block content %}
+
+<div class="card">
+    <div class="card-header">
+        <h2>&#128587; Instructores Registrados</h2>
+        <a href="{% url 'admin_crear_instructor' %}" class="btn btn-success">+ Crear Instructor</a>
+    </div>
+
+    {% if instructores %}
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Usuario</th>
+                <th>Correo</th>
+                <th>Especialidad</th>
+                <th>Estudiantes</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for inst in instructores %}
+            <tr>
+                <td><strong>{{ inst.usuario.get_full_name|default:inst.usuario.username }}</strong></td>
+                <td>{{ inst.usuario.username }}</td>
+                <td>{{ inst.usuario.email|default:"—" }}</td>
+                <td>{{ inst.especialidad|default:"—" }}</td>
+                <td>
+                    <span class="badge" style="background: var(--azul-claro); color: var(--azul-oscuro);">
+                        {{ inst.estudiantes.count }}
+                    </span>
+                </td>
+                <td>
+                    {% if inst.usuario.is_active %}
+                    <span class="badge badge-bajo">Activo</span>
+                    {% else %}
+                    <span class="badge badge-alto">Inactivo</span>
+                    {% endif %}
+                </td>
+                <td style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <a href="{% url 'admin_detalle_instructor' inst.pk %}" class="btn btn-outline" style="font-size: 0.82rem; padding: 0.4rem 0.9rem;">Ver</a>
+                    <a href="{% url 'admin_editar_instructor' inst.pk %}" class="btn" style="font-size: 0.82rem; padding: 0.4rem 0.9rem;">Editar</a>
+                    <form method="post" action="{% url 'admin_toggle_instructor' inst.pk %}" style="display:inline;">
+                        {% csrf_token %}
+                        {% if inst.usuario.is_active %}
+                        <button type="submit" class="btn btn-danger" style="font-size: 0.82rem; padding: 0.4rem 0.9rem;">Desactivar</button>
+                        {% else %}
+                        <button type="submit" class="btn btn-success" style="font-size: 0.82rem; padding: 0.4rem 0.9rem;">Activar</button>
+                        {% endif %}
+                    </form>
+                    <a href="{% url 'admin_eliminar_instructor' inst.pk %}" class="btn btn-danger" style="font-size: 0.82rem; padding: 0.4rem 0.9rem;">Eliminar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div style="text-align: center; padding: 2.5rem; color: var(--texto-suave);">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">&#128587;</div>
+        <p style="font-weight: 600;">No hay instructores registrados aún.</p>
+        <a href="{% url 'admin_crear_instructor' %}" class="btn btn-success" style="margin-top: 1rem;">+ Crear primer instructor</a>
+    </div>
+    {% endif %}
+</div>
+
+<a href="{% url 'admin_dashboard' %}" class="btn btn-outline">&#8592; Volver al panel</a>
+
+{% endblock %}

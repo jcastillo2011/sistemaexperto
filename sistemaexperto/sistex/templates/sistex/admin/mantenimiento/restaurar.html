@@ -1,0 +1,36 @@
+{% extends 'sistex/base.html' %}
+{% block title %}Restaurar · SisTEA{% endblock %}
+{% block content %}
+
+<p class="page-title">&#128257; Restaurar Base de Datos</p>
+
+<div class="card" style="border-left: 4px solid var(--rojo);">
+    <div class="card-header">
+        <h3 style="color: var(--rojo);">&#9888;&#65039; Zona de Peligro</h3>
+    </div>
+    <p style="color: var(--texto-suave); font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.7;">
+        Esta operación carga los datos desde un archivo de respaldo <strong>.json</strong> generado previamente.
+        Los registros existentes <strong>no se eliminan</strong>, los datos del archivo se agregan o actualizan.
+        Se recomienda realizar un respaldo antes de restaurar.
+    </p>
+
+    <div style="background: #FDECEA; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; font-size: 0.9rem; color: var(--rojo);">
+        &#9888;&#65039; Solo carga archivos <strong>.json</strong> generados por esta misma aplicación.
+        No intentes cargar archivos de otras fuentes.
+    </div>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label>Seleccionar archivo de respaldo (.json)</label>
+            <input type="file" name="archivo" accept=".json" required>
+        </div>
+        <button type="submit" class="btn btn-danger" style="font-size: 1rem; padding: 0.75rem 2rem; margin-top: 1rem;">
+            &#11014;&#65039; Restaurar Base de Datos
+        </button>
+    </form>
+</div>
+
+<a href="{% url 'admin_dashboard' %}" class="btn btn-outline">&#8592; Volver al panel</a>
+
+{% endblock %}

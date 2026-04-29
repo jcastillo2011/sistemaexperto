@@ -1,0 +1,81 @@
+{% extends 'sistex/base.html' %}
+{% block title %}Reglas · Panel Admin · SisTEA{% endblock %}
+{% block content %}
+
+<div class="card">
+    <div class="card-header">
+        <h2>&#9881;&#65039; Base de Conocimientos</h2>
+        <span class="badge" style="background: var(--azul-claro); color: var(--azul-oscuro); font-size: 0.9rem; padding: 0.35rem 0.9rem;">
+            {{ reglas.count }} reglas en total
+        </span>
+    </div>
+    <p style="color: var(--texto-suave); font-size: 0.9rem; margin-bottom: 1.25rem;">
+        Reglas SI-ENTONCES del motor de inferencia. Cada regla está respaldada por una fuente bibliográfica académica.
+        Puedes activar o desactivar cada una según las necesidades pedagógicas del centro.
+    </p>
+
+    {% if reglas %}
+    <table>
+        <thead>
+            <tr>
+                <th>Regla</th>
+                <th>Área</th>
+                <th>Nivel</th>
+                <th>Fuente</th>
+                <th>Estado</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for regla in reglas %}
+            <tr>
+                <td>
+                    <strong style="font-size: 0.9rem;">{{ regla.nombre }}</strong>
+                    <p style="font-size: 0.8rem; color: var(--texto-suave); margin-top: 0.2rem;">
+                        {{ regla.recomendacion|truncatechars:90 }}
+                    </p>
+                </td>
+                <td style="font-size: 0.85rem;">{{ regla.campo_evaluado|capfirst }}</td>
+                <td>
+                    <span class="badge badge-{{ regla.valor_condicion }}">
+                        {{ regla.valor_condicion|capfirst }}
+                    </span>
+                </td>
+                <td style="font-size: 0.78rem; color: var(--texto-suave); max-width: 200px;">
+                    {% if regla.fuente_bibliografica %}
+                    <span title="{{ regla.fuente_bibliografica }}">
+                        {{ regla.fuente_bibliografica|truncatechars:60 }}
+                    </span>
+                    {% else %}
+                    <span style="color: var(--gris-borde);">—</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if regla.activa %}
+                    <span class="badge badge-bajo">Activa</span>
+                    {% else %}
+                    <span class="badge badge-alto">Inactiva</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <form method="post" action="{% url 'admin_toggle_regla' regla.pk %}">
+                        {% csrf_token %}
+                        {% if regla.activa %}
+                        <button type="submit" class="btn btn-danger" style="font-size: 0.82rem; padding: 0.4rem 0.9rem;">Desactivar</button>
+                        {% else %}
+                        <button type="submit" class="btn btn-success" style="font-size: 0.82rem; padding: 0.4rem 0.9rem;">Activar</button>
+                        {% endif %}
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="color: var(--texto-suave); text-align: center; padding: 1.5rem;">No hay reglas registradas.</p>
+    {% endif %}
+</div>
+
+<a href="{% url 'admin_dashboard' %}" class="btn btn-outline">&#8592; Volver al panel</a>
+
+{% endblock %}

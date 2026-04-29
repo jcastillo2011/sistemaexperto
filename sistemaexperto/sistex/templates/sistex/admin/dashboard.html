@@ -1,0 +1,119 @@
+{% extends 'sistex/base.html' %}
+{% block title %}Panel de Administración · SisTEA{% endblock %}
+{% block content %}
+
+<div style="margin-bottom: 1.75rem;">
+    <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--azul-oscuro);">
+        &#128737;&#65039; Panel de Administración
+    </h2>
+    <p style="color: var(--texto-suave); margin-top: 0.25rem; font-size: 0.95rem;">
+        Bienvenido, {{ user.get_full_name|default:user.username }} &middot; Fundación Infocentro
+    </p>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card azul">
+        <div class="stat-icon">&#128587;</div>
+        <div class="stat-info">
+            <h3>{{ total_instructores }}</h3>
+            <p>Instructores registrados</p>
+        </div>
+    </div>
+    <div class="stat-card naranja">
+        <div class="stat-icon">&#128102;</div>
+        <div class="stat-info">
+            <h3>{{ total_estudiantes }}</h3>
+            <p>Estudiantes registrados</p>
+        </div>
+    </div>
+    <div class="stat-card" style="background: linear-gradient(135deg, #2E9E5B 0%, #1A6B3C 100%);">
+        <div class="stat-icon">&#128203;</div>
+        <div class="stat-info">
+            <h3>{{ total_evaluaciones }}</h3>
+            <p>Evaluaciones realizadas</p>
+        </div>
+    </div>
+    <div class="stat-card" style="background: linear-gradient(135deg, #7B2FBE 0%, #4A1080 100%);">
+        <div class="stat-icon">&#9881;&#65039;</div>
+        <div class="stat-info">
+            <h3>{{ total_reglas }}</h3>
+            <p>Reglas activas</p>
+        </div>
+    </div>
+</div>
+
+<!-- Accesos rápidos -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+    <div class="card" style="padding: 1.5rem; text-align: center;">
+        <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">&#128587;</div>
+        <p style="font-weight: 800; color: var(--azul-oscuro); margin-bottom: 0.25rem;">Instructores</p>
+        <p style="font-size: 0.82rem; color: var(--texto-suave); margin-bottom: 1rem;">Gestionar cuentas de instructores</p>
+        <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
+            <a href="{% url 'admin_instructores' %}" class="btn btn-outline" style="font-size: 0.82rem; padding: 0.4rem 0.9rem;">Ver todos</a>
+            <a href="{% url 'admin_crear_instructor' %}" class="btn btn-success" style="font-size: 0.82rem; padding: 0.4rem 0.9rem;">+ Crear</a>
+        </div>
+    </div>
+    <div class="card" style="padding: 1.5rem; text-align: center;">
+        <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">&#128102;</div>
+        <p style="font-weight: 800; color: var(--azul-oscuro); margin-bottom: 0.25rem;">Estudiantes</p>
+        <p style="font-size: 0.82rem; color: var(--texto-suave); margin-bottom: 1rem;">Gestionar cuentas de estudiantes</p>
+        <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
+            <a href="{% url 'admin_estudiantes' %}" class="btn btn-outline" style="font-size: 0.82rem; padding: 0.4rem 0.9rem;">Ver todos</a>
+            <a href="{% url 'admin_crear_estudiante' %}" class="btn btn-success" style="font-size: 0.82rem; padding: 0.4rem 0.9rem;">+ Crear</a>
+        </div>
+    </div>
+    <div class="card" style="padding: 1.5rem; text-align: center;">
+        <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">&#128203;</div>
+        <p style="font-weight: 800; color: var(--azul-oscuro); margin-bottom: 0.25rem;">Evaluaciones</p>
+        <p style="font-size: 0.82rem; color: var(--texto-suave); margin-bottom: 1rem;">Ver todas las evaluaciones</p>
+        <div style="display: flex; gap: 0.5rem; justify-content: center;">
+            <a href="{% url 'admin_evaluaciones' %}" class="btn btn-outline" style="font-size: 0.82rem; padding: 0.4rem 0.9rem;">Ver todas</a>
+        </div>
+    </div>
+    <div class="card" style="padding: 1.5rem; text-align: center;">
+        <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">&#9881;&#65039;</div>
+        <p style="font-weight: 800; color: var(--azul-oscuro); margin-bottom: 0.25rem;">Base de Conocimientos</p>
+        <p style="font-size: 0.82rem; color: var(--texto-suave); margin-bottom: 1rem;">Activar o desactivar reglas</p>
+        <div style="display: flex; gap: 0.5rem; justify-content: center;">
+            <a href="{% url 'admin_reglas' %}" class="btn btn-outline" style="font-size: 0.82rem; padding: 0.4rem 0.9rem;">Ver reglas</a>
+        </div>
+    </div>
+</div>
+
+<!-- Últimas evaluaciones -->
+<div class="card">
+    <div class="card-header">
+        <h3>&#128203; Últimas Evaluaciones</h3>
+        <a href="{% url 'admin_estudiantes' %}" class="btn btn-outline" style="font-size: 0.82rem; padding: 0.4rem 0.9rem;">Ver todo</a>
+    </div>
+    {% if ultimas_evaluaciones %}
+    <table>
+        <thead>
+            <tr>
+                <th>Estudiante</th>
+                <th>Instructor</th>
+                <th>Fecha</th>
+                <th>Recomendaciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ev in ultimas_evaluaciones %}
+            <tr>
+                <td><strong>{{ ev.estudiante.nombre }}</strong></td>
+                <td>{{ ev.instructor }}</td>
+                <td>{{ ev.fecha|date:"d/m/Y H:i" }}</td>
+                <td>
+                    <span class="badge" style="background: var(--azul-claro); color: var(--azul-oscuro);">
+                        {{ ev.recomendaciones.count }}
+                    </span>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="color: var(--texto-suave); text-align: center; padding: 1.5rem;">No hay evaluaciones registradas aún.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

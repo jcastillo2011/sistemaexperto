@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SisTEA - Infocentro{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --azul:        #0057A8;
+            --azul-oscuro: #003F7F;
+            --azul-claro:  #E8F1FB;
+            --naranja:     #F47920;
+            --naranja-hover: #D4661A;
+            --verde:       #2E9E5B;
+            --verde-hover: #237A47;
+            --rojo:        #D93025;
+            --rojo-hover:  #B02519;
+            --gris-bg:     #F4F6FA;
+            --gris-borde:  #DDE3EE;
+            --texto:       #1A2340;
+            --texto-suave: #5A6480;
+            --blanco:      #FFFFFF;
+            --sombra:      0 2px 12px rgba(0,87,168,0.10);
+            --radio:       10px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Nunito', 'Segoe UI', sans-serif;
+            background: var(--gris-bg);
+            color: var(--texto);
+            min-height: 100vh;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: linear-gradient(90deg, var(--azul-oscuro) 0%, var(--azul) 100%);
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+        .navbar-brand .logo-icon {
+            width: 38px;
+            height: 38px;
+            background: var(--naranja);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+        .navbar-brand .brand-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.1;
+        }
+        .navbar-brand .brand-title {
+            color: var(--blanco);
+            font-weight: 800;
+            font-size: 1.1rem;
+            letter-spacing: 0.3px;
+        }
+        .navbar-brand .brand-sub {
+            color: rgba(255,255,255,0.70);
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .navbar-links {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        .navbar-links a {
+            color: rgba(255,255,255,0.88);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 0.45rem 0.9rem;
+            border-radius: 6px;
+            transition: background 0.2s, color 0.2s;
+        }
+        .navbar-links a:hover {
+            background: rgba(255,255,255,0.15);
+            color: var(--blanco);
+        }
+        .navbar-links .btn-logout {
+            background: var(--naranja);
+            color: var(--blanco);
+            margin-left: 0.5rem;
+        }
+        .navbar-links .btn-logout:hover { background: var(--naranja-hover); }
+
+        /* Dropdown */
+        .dropdown {
+            position: relative;
+        }
+        .dropdown-toggle {
+            color: rgba(255,255,255,0.88);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 0.45rem 0.9rem;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            transition: background 0.2s;
+            user-select: none;
+        }
+        .dropdown-toggle:hover { background: rgba(255,255,255,0.15); }
+        .dropdown-toggle .arrow {
+            font-size: 0.65rem;
+            transition: transform 0.2s;
+        }
+        .dropdown:hover .arrow { transform: rotate(180deg); }
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: var(--blanco);
+            border-radius: 10px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            min-width: 200px;
+            z-index: 200;
+            overflow: hidden;
+            border: 1px solid var(--gris-borde);
+            padding-top: 8px;
+        }
+        .dropdown-menu::before {
+            content: '';
+            display: block;
+            height: 8px;
+            margin-top: -8px;
+        }
+        .dropdown:hover .dropdown-menu { display: block; }
+        .dropdown-menu a {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.7rem 1rem;
+            color: var(--texto) !important;
+            font-size: 0.88rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 0;
+            transition: background 0.15s;
+        }
+        .dropdown-menu a:hover {
+            background: var(--azul-claro);
+            color: var(--azul-oscuro) !important;
+        }
+        .dropdown-menu .divider {
+            height: 1px;
+            background: var(--gris-borde);
+            margin: 0.25rem 0;
+        }
+        .dropdown-menu .menu-header {
+            padding: 0.5rem 1rem 0.25rem;
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: var(--texto-suave);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1180px;
+            margin: 2rem auto;
+            padding: 0 1.25rem;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--blanco);
+            border-radius: var(--radio);
+            padding: 1.75rem 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--sombra);
+            border: 1px solid var(--gris-borde);
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--azul-claro);
+        }
+        .card-header h2, .card-header h3 {
+            color: var(--azul-oscuro);
+            font-weight: 800;
+        }
+
+        /* Botones */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.55rem 1.2rem;
+            background: var(--azul);
+            color: var(--blanco);
+            text-decoration: none;
+            border-radius: 7px;
+            border: none;
+            cursor: pointer;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: background 0.2s, transform 0.1s;
+        }
+        .btn:hover { background: var(--azul-oscuro); transform: translateY(-1px); }
+        .btn-success { background: var(--verde); }
+        .btn-success:hover { background: var(--verde-hover); }
+        .btn-danger { background: var(--rojo); }
+        .btn-danger:hover { background: var(--rojo-hover); }
+        .btn-outline {
+            background: transparent;
+            color: var(--azul);
+            border: 2px solid var(--azul);
+        }
+        .btn-outline:hover { background: var(--azul-claro); transform: translateY(-1px); }
+
+        /* Mensajes */
+        .messages { list-style: none; margin-bottom: 1rem; }
+        .messages li {
+            padding: 0.85rem 1.2rem;
+            margin-bottom: 0.75rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        .messages .success { background: #E6F7EE; color: #1A6B3C; border-left: 4px solid var(--verde); }
+        .messages .error   { background: #FDECEA; color: #8B1A14; border-left: 4px solid var(--rojo); }
+
+        /* Tablas */
+        table { width: 100%; border-collapse: collapse; }
+        table th {
+            background: var(--azul-claro);
+            color: var(--azul-oscuro);
+            font-weight: 800;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-size: 0.88rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+        table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--gris-borde);
+            font-size: 0.95rem;
+        }
+        table tbody tr:hover { background: #F8FAFF; }
+        table tbody tr:last-child td { border-bottom: none; }
+
+        /* Formularios */
+        .form-group { margin-bottom: 1.1rem; }
+        .form-group label {
+            display: block;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--azul-oscuro);
+            margin-bottom: 0.35rem;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.6rem 0.85rem;
+            border: 1.5px solid var(--gris-borde);
+            border-radius: 7px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.95rem;
+            color: var(--texto);
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: var(--blanco);
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--azul);
+            box-shadow: 0 0 0 3px rgba(0,87,168,0.12);
+        }
+        .form-error { color: var(--rojo); font-size: 0.82rem; margin-top: 0.25rem; font-weight: 600; }
+
+        /* Stat cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+        .stat-card {
+            border-radius: var(--radio);
+            padding: 1.5rem;
+            color: var(--blanco);
+            box-shadow: var(--sombra);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .stat-card.azul    { background: linear-gradient(135deg, var(--azul) 0%, var(--azul-oscuro) 100%); }
+        .stat-card.naranja { background: linear-gradient(135deg, #F47920 0%, #C95E10 100%); }
+        .stat-icon {
+            font-size: 2.2rem;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .stat-info h3 { font-size: 2rem; font-weight: 800; line-height: 1; }
+        .stat-info p  { font-size: 0.88rem; opacity: 0.9; margin-top: 0.2rem; font-weight: 600; }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.65rem;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+        .badge-bajo  { background: #E6F7EE; color: #1A6B3C; }
+        .badge-medio { background: #FFF4E5; color: #8B5E00; }
+        .badge-alto  { background: #FDECEA; color: #8B1A14; }
+
+        /* Recomendacion card */
+        .rec-card {
+            border-left: 4px solid var(--azul);
+            background: var(--azul-claro);
+            border-radius: 0 8px 8px 0;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1rem;
+        }
+        .rec-card strong { color: var(--azul-oscuro); font-size: 0.95rem; }
+        .rec-card p { margin-top: 0.4rem; font-size: 0.93rem; color: var(--texto); }
+        .rec-recursos { margin-top: 0.5rem; font-size: 0.88rem; color: var(--verde); font-weight: 700; }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: var(--texto-suave);
+            font-size: 0.82rem;
+            border-top: 1px solid var(--gris-borde);
+            margin-top: 3rem;
+        }
+        .footer span { color: var(--naranja); font-weight: 700; }
+
+        /* Page title */
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--azul-oscuro);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .page-title::after {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: var(--gris-borde);
+            margin-left: 0.75rem;
+        }
+    </style>
+</head>
+<body>
+
+{% if user.is_authenticated %}
+<nav class="navbar">
+    {% if user.is_staff %}
+    <a href="{% url 'admin_dashboard' %}" class="navbar-brand">
+    {% else %}
+    <a href="{% url 'dashboard' %}" class="navbar-brand">
+    {% endif %}
+        <div class="logo-icon">&#129504;</div>
+        <div class="brand-text">
+            <span class="brand-title">SisTEA</span>
+            <span class="brand-sub">Infocentro &middot; Barcelona, Anzo&aacute;tegui</span>
+        </div>
+    </a>
+    <div class="navbar-links">
+        {% if user.is_staff %}
+            <a href="{% url 'admin_dashboard' %}">&#127968; Inicio</a>
+
+            <!-- Usuarios -->
+            <div class="dropdown">
+                <span class="dropdown-toggle">&#128100; Usuarios <span class="arrow">&#9660;</span></span>
+                <div class="dropdown-menu">
+                    <div class="menu-header">Instructores</div>
+                    <a href="{% url 'admin_instructores' %}">&#128587; Instructores</a>
+                    <div class="divider"></div>
+                    <div class="menu-header">Estudiantes</div>
+                    <a href="{% url 'admin_estudiantes' %}">&#128102; Ver estudiantes</a>
+                </div>
+            </div>
+
+            <!-- Seguimiento -->
+            <div class="dropdown">
+                <span class="dropdown-toggle">&#128203; Seguimiento <span class="arrow">&#9660;</span></span>
+                <div class="dropdown-menu">
+                    <div class="menu-header">Evaluaciones</div>
+                    <a href="{% url 'admin_evaluaciones' %}">&#128203; Ver todas las evaluaciones</a>
+                    <div class="divider"></div>
+                    <div class="menu-header">Base de Conocimientos</div>
+                    <a href="{% url 'admin_reglas' %}">&#9881;&#65039; Gestionar reglas</a>
+                </div>
+            </div>
+
+            <!-- Mantenimiento -->
+            <div class="dropdown">
+                <span class="dropdown-toggle">&#128295; Mantenimiento <span class="arrow">&#9660;</span></span>
+                <div class="dropdown-menu">
+                    <div class="menu-header">Base de Datos</div>
+                    <a href="{% url 'admin_respaldo' %}">&#128190; Respaldar</a>
+                    <a href="{% url 'admin_restaurar' %}">&#128257; Restaurar</a>
+                    <div class="divider"></div>
+                    <div class="menu-header">Sistema</div>
+                    <a href="{% url 'admin_logs' %}">&#128196; Ver logs</a>
+                </div>
+            </div>
+        {% elif user.instructor is not None %}
+            <a href="{% url 'dashboard' %}">&#127968; Inicio</a>
+            <a href="{% url 'lista_estudiantes' %}">&#128102; Estudiantes</a>
+        {% else %}
+            <a href="{% url 'estudiante_dashboard' %}">&#128102; Mi Perfil</a>
+        {% endif %}
+        <form method="post" action="{% url 'logout' %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn-logout" style="background: var(--naranja); color: white; border: none; padding: 0.45rem 0.9rem; border-radius: 6px; font-family: inherit; font-weight: 600; font-size: 0.9rem; cursor: pointer; margin-left: 0.5rem;">Cerrar sesi&oacute;n</button>
+        </form>
+    </div>
+</nav>
+{% endif %}
+
+<div class="container">
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+</div>
+
+<footer class="footer">
+    SisTEA &mdash; Sistema Experto para el apoyo pedag&oacute;gico en TEA &nbsp;|&nbsp;
+    <span>Fundaci&oacute;n Infocentro</span> &nbsp;&middot;&nbsp; Barcelona, Estado Anzo&aacute;tegui, Venezuela
+</footer>
+
+</body>
+</html>

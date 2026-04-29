@@ -1,0 +1,112 @@
+{% extends 'sistex/base.html' %}
+{% block title %}{{ instructor }} · Panel Admin · SisTEA{% endblock %}
+{% block content %}
+
+<p class="page-title">👨🏫 Detalle del Instructor</p>
+
+<!-- Info del instructor -->
+<div class="card">
+    <div class="card-header">
+        <div>
+            <h2>{{ instructor.usuario.get_full_name|default:instructor.usuario.username }}</h2>
+            <p style="color: var(--texto-suave); font-size: 0.9rem; margin-top: 0.25rem;">
+                @{{ instructor.usuario.username }} · {{ instructor.usuario.email|default:"Sin correo" }}
+            </p>
+        </div>
+        <div style="display: flex; gap: 0.6rem; align-items: center;">
+            {% if instructor.usuario.is_active %}
+            <span class="badge badge-bajo" style="font-size: 0.88rem; padding: 0.35rem 0.9rem;">Activo</span>
+            {% else %}
+            <span class="badge badge-alto" style="font-size: 0.88rem; padding: 0.35rem 0.9rem;">Inactivo</span>
+            {% endif %}
+            <form method="post" action="{% url 'admin_toggle_instructor' instructor.pk %}">
+                {% csrf_token %}
+                {% if instructor.usuario.is_active %}
+                <button type="submit" class="btn btn-danger">Desactivar cuenta</button>
+                {% else %}
+                <button type="submit" class="btn btn-success">Activar cuenta</button>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem;">
+        <div>
+            <p style="font-size: 0.82rem; color: var(--texto-suave); font-weight: 700; text-transform: uppercase;">Especialidad</p>
+            <p style="margin-top: 0.25rem;">{{ instructor.especialidad|default:"No especificada" }}</p>
+        </div>
+        <div>
+            <p style="font-size: 0.82rem; color: var(--texto-suave); font-weight: 700; text-transform: uppercase;">Teléfono</p>
+            <p style="margin-top: 0.25rem;">{{ instructor.telefono|default:"No registrado" }}</p>
+        </div>
+        <div>
+            <p style="font-size: 0.82rem; color: var(--texto-suave); font-weight: 700; text-transform: uppercase;">Estudiantes</p>
+            <p style="margin-top: 0.25rem;">{{ estudiantes.count }}</p>
+        </div>
+        <div>
+            <p style="font-size: 0.82rem; color: var(--texto-suave); font-weight: 700; text-transform: uppercase;">Evaluaciones</p>
+            <p style="margin-top: 0.25rem;">{{ evaluaciones.count }}</p>
+        </div>
+    </div>
+</div>
+
+<!-- Estudiantes del instructor -->
+<div class="card">
+    <div class="card-header">
+        <h3>👦 Estudiantes asignados</h3>
+    </div>
+    {% if estudiantes %}
+    <table>
+        <thead>
+            <tr><th>Nombre</th><th>Fecha de Nacimiento</th><th>Evaluaciones</th></tr>
+        </thead>
+        <tbody>
+            {% for est in estudiantes %}
+            <tr>
+                <td><strong>{{ est.nombre }}</strong></td>
+                <td>{{ est.fecha_nacimiento }}</td>
+                <td>
+                    <span class="badge" style="background: var(--azul-claro); color: var(--azul-oscuro);">
+                        {{ est.evaluaciones.count }}
+                    </span>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="color: var(--texto-suave); text-align: center; padding: 1.5rem;">Este instructor no tiene estudiantes asignados.</p>
+    {% endif %}
+</div>
+
+<!-- Últimas evaluaciones -->
+<div class="card">
+    <div class="card-header">
+        <h3>📋 Últimas evaluaciones realizadas</h3>
+    </div>
+    {% if evaluaciones %}
+    <table>
+        <thead>
+            <tr><th>Estudiante</th><th>Fecha</th><th>Recomendaciones</th></tr>
+        </thead>
+        <tbody>
+            {% for ev in evaluaciones|slice:":10" %}
+            <tr>
+                <td><strong>{{ ev.estudiante.nombre }}</strong></td>
+                <td>{{ ev.fecha|date:"d/m/Y H:i" }}</td>
+                <td>
+                    <span class="badge" style="background: var(--azul-claro); color: var(--azul-oscuro);">
+                        {{ ev.recomendaciones.count }}
+                    </span>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="color: var(--texto-suave); text-align: center; padding: 1.5rem;">No hay evaluaciones registradas.</p>
+    {% endif %}
+</div>
+
+<a href="{% url 'admin_instructores' %}" class="btn btn-outline">← Volver a instructores</a>
+
+{% endblock %}

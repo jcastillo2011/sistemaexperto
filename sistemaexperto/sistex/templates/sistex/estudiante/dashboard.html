@@ -1,0 +1,71 @@
+{% extends 'sistex/base.html' %}
+{% block title %}Mi Perfil · SisTEA{% endblock %}
+{% block content %}
+
+<div style="margin-bottom: 1.75rem;">
+    <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--azul-oscuro);">
+        👦 Bienvenido, {{ estudiante.nombre }}
+    </h2>
+    <p style="color: var(--texto-suave); margin-top: 0.25rem; font-size: 0.95rem;">
+        Instructor asignado: <strong>{{ estudiante.instructor }}</strong>
+    </p>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card azul">
+        <div class="stat-icon">📋</div>
+        <div class="stat-info">
+            <h3>{{ evaluaciones.count }}</h3>
+            <p>Evaluaciones realizadas</p>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3>📋 Mis Evaluaciones</h3>
+    </div>
+
+    {% if evaluaciones %}
+    <table>
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Comunicación</th>
+                <th>Social</th>
+                <th>Conductas</th>
+                <th>Recomendaciones</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ev in evaluaciones %}
+            <tr>
+                <td>{{ ev.fecha|date:"d/m/Y H:i" }}</td>
+                <td><span class="badge badge-{{ ev.dificultad_comunicacion }}">{{ ev.get_dificultad_comunicacion_display }}</span></td>
+                <td><span class="badge badge-{{ ev.interaccion_social }}">{{ ev.get_interaccion_social_display }}</span></td>
+                <td><span class="badge badge-{{ ev.conductas_repetitivas }}">{{ ev.get_conductas_repetitivas_display }}</span></td>
+                <td>
+                    <span class="badge" style="background: var(--azul-claro); color: var(--azul-oscuro);">
+                        {{ ev.recomendaciones.count }}
+                    </span>
+                </td>
+                <td>
+                    <a href="{% url 'resultados_evaluacion' ev.pk %}" class="btn btn-outline" style="font-size: 0.82rem; padding: 0.4rem 0.9rem;">
+                        Ver resultados
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div style="text-align: center; padding: 2.5rem; color: var(--texto-suave);">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">📋</div>
+        <p style="font-weight: 600;">Aún no tienes evaluaciones registradas.</p>
+        <p style="font-size: 0.9rem; margin-top: 0.5rem;">Tu instructor realizará las evaluaciones y podrás ver los resultados aquí.</p>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

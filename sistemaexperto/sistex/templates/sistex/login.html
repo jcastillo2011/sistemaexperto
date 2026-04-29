@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión · SisTEA</title>
+    {% load static %}
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --azul: #0057A8;
+            --azul-oscuro: #003F7F;
+            --naranja: #F47920;
+            --gris-bg: #F4F6FA;
+            --gris-borde: #DDE3EE;
+            --texto: #1A2340;
+            --texto-suave: #5A6480;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, var(--azul-oscuro) 0%, var(--azul) 60%, #1a7fd4 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        .login-wrapper {
+            display: flex;
+            width: 100%;
+            max-width: 900px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .login-left {
+            background: linear-gradient(160deg, var(--azul-oscuro) 0%, #0068C8 100%);
+            flex: 1;
+            padding: 3rem 2.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            color: white;
+        }
+        .login-left .logo {
+            margin-bottom: 1.5rem;
+        }
+        .login-left .logo img {
+            width: 220px;
+            height: 220px;
+            object-fit: contain;
+            border-radius: 50%;
+            border: 4px solid rgba(255,255,255,0.3);
+            background: white;
+        }
+        .login-left h1 { font-size: 2rem; font-weight: 800; line-height: 1.2; }
+        .login-left h1 span { color: var(--naranja); }
+        .login-left p { margin-top: 1rem; opacity: 0.8; font-size: 0.95rem; line-height: 1.6; }
+        .login-left .institución {
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            font-size: 0.82rem;
+            opacity: 0.7;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .login-right {
+            background: white;
+            flex: 1;
+            padding: 3rem 2.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .login-right h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--azul-oscuro);
+            margin-bottom: 0.4rem;
+        }
+        .login-right p.sub { color: var(--texto-suave); font-size: 0.9rem; margin-bottom: 2rem; }
+        .form-group { margin-bottom: 1.1rem; }
+        .form-group label {
+            display: block;
+            font-weight: 700;
+            font-size: 0.88rem;
+            color: var(--texto);
+            margin-bottom: 0.35rem;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 0.65rem 0.9rem;
+            border: 1.5px solid var(--gris-borde);
+            border-radius: 8px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.95rem;
+            color: var(--texto);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--azul);
+            box-shadow: 0 0 0 3px rgba(0,87,168,0.12);
+        }
+        .btn-login {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--naranja);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 1rem;
+            font-weight: 800;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            transition: background 0.2s, transform 0.1s;
+        }
+        .btn-login:hover { background: #D4661A; transform: translateY(-1px); }
+        .error-msg {
+            background: #FDECEA;
+            color: #8B1A14;
+            border-left: 4px solid #D93025;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        .register-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--texto-suave);
+        }
+        .register-link a { color: var(--azul); font-weight: 700; text-decoration: none; }
+        .register-link a:hover { text-decoration: underline; }
+        @media (max-width: 640px) {
+            .login-left { display: none; }
+            .login-right { padding: 2rem 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="login-wrapper">
+    <div class="login-left">
+        <div class="logo">
+            <img src="{% static 'sistex/img/logo.png' %}" alt="Logo Infocentro">
+        </div>
+        <h1>Sistema Experto <span>TEA</span></h1>
+        <p>Plataforma de apoyo pedagógico para instructores que trabajan con niños con Trastorno del Espectro Autista.</p>
+        <div class="institución">
+            Fundación Infocentro<br>
+            Barcelona · Estado Anzoátegui · Venezuela
+        </div>
+    </div>
+    <div class="login-right">
+        <h2>Bienvenido</h2>
+        <p class="sub">Ingresa tus credenciales para continuar</p>
+
+        {% if messages %}
+            {% for message in messages %}
+            <div class="error-msg">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Usuario</label>
+                <input type="text" name="username" placeholder="Tu nombre de usuario" required autofocus>
+            </div>
+            <div class="form-group">
+                <label>Contraseña</label>
+                <input type="password" name="password" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="btn-login">Ingresar al sistema</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

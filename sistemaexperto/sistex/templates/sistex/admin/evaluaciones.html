@@ -1,0 +1,60 @@
+{% extends 'sistex/base.html' %}
+{% block title %}Evaluaciones · Panel Admin · SisTEA{% endblock %}
+{% block content %}
+
+<div class="card">
+    <div class="card-header">
+        <h2>&#128203; Todas las Evaluaciones</h2>
+        <span class="badge" style="background: var(--azul-claro); color: var(--azul-oscuro); font-size: 0.9rem; padding: 0.35rem 0.9rem;">
+            {{ evaluaciones.count }} registradas
+        </span>
+    </div>
+
+    {% if evaluaciones %}
+    <table>
+        <thead>
+            <tr>
+                <th>Estudiante</th>
+                <th>Instructor</th>
+                <th>Fecha</th>
+                <th>Comunicación</th>
+                <th>Social</th>
+                <th>Conductas</th>
+                <th>Recomendaciones</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ev in evaluaciones %}
+            <tr>
+                <td><strong>{{ ev.estudiante.nombre }}</strong></td>
+                <td>{{ ev.instructor }}</td>
+                <td>{{ ev.fecha|date:"d/m/Y H:i" }}</td>
+                <td><span class="badge badge-{{ ev.dificultad_comunicacion }}">{{ ev.get_dificultad_comunicacion_display }}</span></td>
+                <td><span class="badge badge-{{ ev.interaccion_social }}">{{ ev.get_interaccion_social_display }}</span></td>
+                <td><span class="badge badge-{{ ev.conductas_repetitivas }}">{{ ev.get_conductas_repetitivas_display }}</span></td>
+                <td>
+                    <span class="badge" style="background: var(--azul-claro); color: var(--azul-oscuro);">
+                        {{ ev.recomendaciones.count }}
+                    </span>
+                </td>
+                <td>
+                    <a href="{% url 'admin_ver_evaluacion' ev.pk %}" class="btn btn-outline" style="font-size: 0.82rem; padding: 0.4rem 0.9rem;">
+                        Ver resultados
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div style="text-align: center; padding: 2.5rem; color: var(--texto-suave);">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">&#128203;</div>
+        <p style="font-weight: 600;">No hay evaluaciones registradas aún.</p>
+    </div>
+    {% endif %}
+</div>
+
+<a href="{% url 'admin_dashboard' %}" class="btn btn-outline">&#8592; Volver al panel</a>
+
+{% endblock %}
